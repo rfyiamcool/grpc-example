@@ -4,7 +4,7 @@ golang grpc example
 
 ## Usage
 
-#### unary
+### unary
 
 start server
 
@@ -18,44 +18,44 @@ start client
 go run simple/server/server.go
 ```
 
-#### bidi
+### bidi
 
 start server
 
 ```
-go run simple/bidirectional-streaming/server.go
+go run bidirectional-streaming/server/server.go
 ```
 
 start client
 
 ```
-go run simple/bidirectional-streaming/server.go
+go run bidirectional-streaming/client/client.go
 ```
 
-#### client side streaming
+### client side streaming
 
 start server
 
 ```
-go run simple/client-side-streaming/server.go
+go run client-side-streaming/server/server.go
 ```
 
 start client
 
 ```
-go run simple/client-side-streaming/server.go
+go run client-side-streaming/client/client.go
 ```
 
-#### server side streaming
+### server side streaming
 
 start server
 
 ```
-go run simple/server-side-streaming/server.go
+go run server-side-streaming/server/server.go
 ```
 
 start client
 
 ```
-go run simple/server-side-streaming/server.go
+go run server-side-streaming/client/client.go
 ```

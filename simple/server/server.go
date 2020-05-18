@@ -7,18 +7,21 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
 
 	pb "github.com/rfyiamcool/grpc-example/simple/proto"
 )
 
+var (
+	addr = "0.0.0.0:3001"
+)
+
 var users = map[int32]pb.UserResponse{
-	0: {Name: "filco", Age: 13},
-	1: {Name: "vscode", Age: 70},
-	2: {Name: "vim", Age: 75},
-	3: {Name: "hhkb", Age: 62},
-	4: {Name: "rfyiamcool", Age: 22},
-	5: {Name: "rui", Age: 23},
+	0: {Name: "filco......", Age: 13},
+	1: {Name: "vscode.....", Age: 70},
+	2: {Name: "vim......", Age: 75},
+	3: {Name: "hhkb......", Age: 62},
 }
 
 type simpleServer struct{}
@@ -44,11 +47,11 @@ func (s *simpleServer) GetUserInfo(ctx context.Context, req *pb.UserRequest) (re
 
 	log.Printf("recv request: %+v\n", req.ID)
 	log.Printf("recv header: %+v\n", reqHeader)
+
 	return
 }
 
 func main() {
-	addr := "0.0.0.0:3001"
 	listener, err := net.Listen("tcp", addr)
 	if err != nil {
 		log.Fatalf("listen error: %v", err)
@@ -56,7 +59,12 @@ func main() {
 		log.Println("server listen: ", addr)
 	}
 
-	grpcServer := grpc.NewServer()
+	creds, err := credentials.NewServerTLSFromFile("cert/server.cert", "cert/server.key")
+	if err != nil {
+		log.Fatalf("tls error: %v", err)
+	}
+
+	grpcServer := grpc.NewServer(grpc.Creds(creds))
 	pb.RegisterUserServiceServer(grpcServer, &simpleServer{})
 	grpcServer.Serve(listener)
 }

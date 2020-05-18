@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
 
 	pb "github.com/rfyiamcool/grpc-example/simple/proto"
@@ -18,7 +19,13 @@ var (
 
 func main() {
 	flag.Parse()
-	conn, err := grpc.Dial(*addr, grpc.WithInsecure())
+
+	creds, err := credentials.NewClientTLSFromFile("cert/server.cert", "xiaorui.cc") // xiaorui.cc is cert's "Common Name (fully qualified host name) "
+	if err != nil {
+		log.Fatalf("credentials.NewClientTLSFromFile err: %v", err)
+	}
+
+	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(creds))
 	if err != nil {
 		log.Fatalf("connect server error: %v", err)
 	}

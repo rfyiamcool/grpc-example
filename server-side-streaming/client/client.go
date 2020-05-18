@@ -7,6 +7,7 @@ import (
 	"log"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 
 	pb "github.com/rfyiamcool/grpc-example/server-side-streaming/proto"
 )
@@ -24,11 +25,21 @@ func main() {
 	}
 	defer conn.Close()
 
+	// create header
+	md := metadata.Pairs("my-req-key1", "haha", "my-req-key2", "hello")
+	ctx := metadata.NewOutgoingContext(context.Background(), md)
+
+	// req
 	grpcClient := pb.NewUserServiceClient(conn)
 	req := pb.UserRequest{ID: 1}
-	stream, err := grpcClient.GetUserInfo(context.Background(), &req)
+	stream, err := grpcClient.GetUserInfo(ctx, &req)
 	if err != nil {
 		log.Fatalf("recevie resp error: %v", err)
+	}
+
+	header, err := stream.Header()
+	if err == nil {
+		log.Printf("[RECEIVED HEADER]: %v\n", header)
 	}
 
 	for {
