@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
+	"io/ioutil"
 	"log"
 	"net"
 	"time"
@@ -14,14 +16,42 @@ import (
 )
 
 var (
-	addr = "0.0.0.0:3001"
+	addr  = "0.0.0.0:3001"
+	users = map[int32]pb.UserResponse{
+		0: {Name: "filco......", Age: 13},
+		1: {Name: "vscode.....", Age: 70},
+		2: {Name: "vim......", Age: 75},
+		3: {Name: "hhkb......", Age: 62},
+	}
 )
 
-var users = map[int32]pb.UserResponse{
-	0: {Name: "filco......", Age: 13},
-	1: {Name: "vscode.....", Age: 70},
-	2: {Name: "vim......", Age: 75},
-	3: {Name: "hhkb......", Age: 62},
+var (
+	certBody []byte
+	keyBody  []byte
+)
+
+func initTLS() error {
+	var err error
+	certBody, err = ioutil.ReadFile("cert/server.cert")
+	if err != nil {
+		return err
+	}
+
+	keyBody, err = ioutil.ReadFile("cert/server.key")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func newCreds() (credentials.TransportCredentials, error) {
+	initTLS()
+	cert, err := tls.X509KeyPair(certBody, keyBody)
+	if err != nil {
+		return nil, nil
+	}
+
+	return credentials.NewTLS(&tls.Config{Certificates: []tls.Certificate{cert}}), nil
 }
 
 type simpleServer struct{}
@@ -59,7 +89,12 @@ func main() {
 		log.Println("server listen: ", addr)
 	}
 
+	// tls method 1
 	creds, err := credentials.NewServerTLSFromFile("cert/server.cert", "cert/server.key")
+
+	// tls method 2
+	creds, err = newCreds()
+
 	if err != nil {
 		log.Fatalf("tls error: %v", err)
 	}
