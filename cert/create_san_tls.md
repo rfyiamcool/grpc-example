@@ -2,8 +2,6 @@
 
 ### 被干掉的 X509
 
-https://blog.csdn.net/cuichenghd/article/details/109230584
-
 在 golang grpc tls 里不能直接使用 X509 生成的证书, 不然会报如下的错误.
 
 ```
@@ -103,3 +101,9 @@ creds, err := credentials.NewServerTLSFromFile("test.pem", "test.key")
 ```
 creds,err := credentials.NewClientTLSFromFile("test.pem", "*.xiaorui.cc")
 ```
+
+### refer
+
+- [https://blog.csdn.net/cuichenghd/article/details/109230584](https://blog.csdn.net/cuichenghd/article/details/109230584)
+- [https://www.cnblogs.com/jackluo/p/13841286.html](https://www.cnblogs.com/jackluo/p/13841286.html)
+
