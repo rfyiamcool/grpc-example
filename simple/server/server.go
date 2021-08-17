@@ -90,10 +90,10 @@ func main() {
 	}
 
 	// tls method 1
-	creds, err := credentials.NewServerTLSFromFile("cert/server.cert", "cert/server.key")
+	creds, err := credentials.NewServerTLSFromFile("cert/test.pem", "cert/test.key")
 
 	// tls method 2
-	creds, err = newCreds()
+	// creds, err = newCreds()
 
 	if err != nil {
 		log.Fatalf("tls error: %v", err)

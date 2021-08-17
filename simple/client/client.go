@@ -20,7 +20,7 @@ var (
 func main() {
 	flag.Parse()
 
-	creds, err := credentials.NewClientTLSFromFile("cert/server.cert", "xiaorui.cc") // xiaorui.cc is cert's "Common Name (fully qualified host name) "
+	creds, err := credentials.NewClientTLSFromFile("cert/test.pem", "hualala") // xiaorui.cc is cert's "Common Name (fully qualified host name) "
 	if err != nil {
 		log.Fatalf("credentials.NewClientTLSFromFile err: %v", err)
 	}
